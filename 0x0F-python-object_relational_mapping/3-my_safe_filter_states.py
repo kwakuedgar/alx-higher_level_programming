@@ -1,23 +1,37 @@
 #!/usr/bin/python3
+"""List all states where 'name' matches the argument
+But this time, one safe from MySQL injection.
+Username, password, database name, and state name given as user args
 """
-List all states where 'name' matches the argument
-from the database `hbtn_0e_0_usa`.
-This time the it's safe from MySQL injections!
-"""
-
-import MySQLdb as db
-from sys import argv
-
 if __name__ == "__main__":
-    db_connect = db.connect(host="localhost", port=3306,
-                            user=argv[1], passwd=argv[2], db=argv[3])
+    import MySQLdb
+    import sys
 
-    db_cursor = db_connect.cursor()
-    db_cursor.execute(
-        "SELECT * FROM states WHERE name LIKE \
-                    BINARY %(name)s ORDER BY states.id ASC", {'name': argv[4]})
+    user_name = sys.argv[1]
+    user_password = sys.argv[2]
+    db_name = sys.argv[3]
+    state_name = sys.argv[4]
 
-    rows_selected = db_cursor.fetchall()
+    db_connection = MySQLdb.connect(
+        host="localhost",
+        port=3306,
+        user=user_name,
+        passwd=user_password,
+        db=db_name,
+        charset="utf8"
+    )
 
-    for row in rows_selected:
-        print(row)
+    db_cursor = db_connection.cursor()
+    db_cursor.execute("""
+                        SELECT *
+                        FROM states
+                        WHERE states.name LIKE BINARY %s
+                        ORDER BY states.id ASC
+                        """, (state_name,))
+    states_by_name = db_cursor.fetchall()
+
+    for state in states_by_name:
+        print(state)
+
+    db_cursor.close()
+    db_connection.close()

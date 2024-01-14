@@ -1,16 +1,24 @@
 #!/usr/bin/python3
+
 """
-This script defines a City class
+This module contains the class definition of a City
 """
-from model_state import Base, State
-from sqlalchemy import Column, Integer, String, ForeignKey
+
+from sqlalchemy import Column, String, Integer, ForeignKey
+from model_state import Base
 
 
 class City(Base):
-    """Representation of a city"""
+    """
+    The Citit class maps <City object> to the <cities table>
 
-    __tablename__ = 'cities'
+    Args:
+        __tablename__ (str): name of the mapping table
+        id (int): the unique id
+        name (str): the value, name of a city
 
+    """
+    __tablename__ = "cities"
     id = Column(Integer, primary_key=True)
-    state_id = Column(Integer, ForeignKey('states.id'), nullable=False)
     name = Column(String(128), nullable=False)
+    state_id = Column(Integer, ForeignKey("states.id"), nullable=False)

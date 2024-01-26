@@ -1,14 +1,14 @@
 #!/usr/bin/python3
-"""A script that:
- - Sends a POST request to a given URL with a given email.
- - Displays the body of the response
+"""Sends a POST request to a given URL with a given email.
+   Displays the body of the response.
 """
 import sys
-import urllib.request
+import requests
+
 
 if __name__ == "__main__":
     url = sys.argv[1]
+    value = {"email": sys.argv[2]}
 
-    request = urllib.request.Request(url)
-    with urllib.request.urlopen(request) as response:
-        print(dict(response.headers).get("X-Request-Id"))
+    r = requests.post(url, data=value)
+    print(r.text)
